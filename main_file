@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# Define constants
+readonly RECIPE_DIR="recipes"
+readonly DEFAULT_RECIPE="default.txt"
+
+# Define functions
+display_greeting() {
+  echo "Good day! Welcome to Recipe Generator where we make your life easy!"
+}
+
+get_user_name() {
+  read -p "What's your name? " name
+  echo "Hello, $name!"
+}
+
+display_menu() {
+  echo "What type of food are you in the mood for?"
+  echo "1. Breakfast"
+  echo "2. Lunch"
+  echo "3. Dinner"
+  echo "4. Dessert"
+  echo "5. I don't know!"
+}
+
+get_meal_choice() {
+  read -p "Enter your choice: " meal_choice
+}
+
+display_cuisine_menu() {
+  echo "What type of cuisine are you in the mood for?"
+  echo "1. American"
+  echo "2. Mexican"
+  echo "3. Italian"
+  echo "4. Indian"
+  echo "5. I don't know!"
+}
+
+get_cuisine_choice() {
+  read -p "Enter your choice: " cuisine_choice
+}
+
+get_recipe_file() {
+  local meal=$1
+  local cuisine=$2
+  local recipe_file="$RECIPE_DIR/"
+
+  case "$meal" in
+    1)
+      recipe_file+="american_"
+      ;;
+    2)
+      recipe_file+="mexican_"
+      ;;
+    3)
+      recipe_file+="italian_"
+      ;;
+    4)
+      recipe_file+="indian_"
+      ;;
+    5)
+      recipe_file+=""
+      ;;
+    *)
+      echo "Invalid input."
+      exit 1
+  esac
+
+  case "$cuisine" in
+    1)
+      recipe_file+="breakfast.txt"
+      ;;
+    2)
+      recipe_file+="lunch.txt"
+      ;;
+    3)
+      recipe_file+="dinner.txt"
+      ;;
+    4)
+      recipe_file+="dessert.txt"
+      ;;
+    5)
+      recipe_file+=""
+      ;;
+    *)
+      echo "Invalid input."
+      exit 1
+  esac
+
+  if [ ! -f "$recipe_file" ]; then
+    recipe_file="$RECIPE_DIR/$DEFAULT_RECIPE"
+  fi
+
+  echo "$recipe_file"
+}
+
+# Main program
+display_greeting
+get_user_name
+display_menu
+get_meal_choice
+display_cuisine_menu
+get_cuisine_choice
+recipe_file=$(get_recipe_file "$meal_choice" "$cuisine_choice")
+echo "Here's the recipe for your selected meal:"
+echo "----------------------------------------"
+cat "$recipe_file"
